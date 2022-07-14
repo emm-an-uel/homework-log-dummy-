@@ -10,11 +10,16 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.example.homeworklog_dummy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private fun newTask(view: View) {
+        // create popup box with EditText to put homework name, date, notes
 
     }
 
