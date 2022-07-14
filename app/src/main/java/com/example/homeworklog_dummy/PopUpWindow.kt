@@ -1,10 +1,15 @@
 package com.example.homeworklog_dummy
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
+import android.app.Activity
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.ColorUtils
 import com.example.homeworklog_dummy.databinding.ActivityPopUpWindowBinding
 import kotlinx.android.synthetic.main.activity_pop_up_window.*
 
@@ -37,10 +42,12 @@ class PopUpWindow : AppCompatActivity() {
         popupButton = bundle?.getString("popupbtn", "Button") ?: ""
         darkStatusBar = bundle?.getBoolean("darkstatusbar", false) ?: false
 
+        // delete self when button pressed
         popup_window_button.setOnClickListener() {
             onBackPressed()
         }
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
