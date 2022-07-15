@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.homeworklog_dummy.databinding.FragmentInputBinding
-import android.widget.DatePicker
-import android.app.DatePickerDialog
-import android.widget.EditText
 import android.widget.Toast
-import java.time.format.DateTimeFormatter
-
-import java.util.Calendar
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.homeworklog_dummy.databinding.FragmentInputBinding
+import java.util.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -38,10 +34,7 @@ class InputFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // declare variables (user input)
-        val subject = binding.subject.text
-        val task = binding.task.text
-        val notes = binding.notes.text
+        var dueDate = ""
 
         // datePicker stuff
         val today = Calendar.getInstance()
@@ -49,9 +42,20 @@ class InputFragment : Fragment() {
             today.get(Calendar.DAY_OF_MONTH)
         ) { view, year, month, day ->
                 val month = month + 1
-                val msg = "You Selected: $day/$month/$year"
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                dueDate = "$day $month $year"
             }
+
+        // when button "confirm" is clicked
+        binding.buttonConfirm.setOnClickListener() {
+            val subject = binding.subject.text.toString()
+            val task = binding.task.text.toString()
+            val notes = binding.notes.text.toString()
+            val newAssignment = true
+
+            // sends subject, task, dueDate, notes to LogFragment and navigates there
+            val action = InputFragmentDirections.actionInputFragmentToLogFragment(subject, task, dueDate, notes, newAssignment)
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {

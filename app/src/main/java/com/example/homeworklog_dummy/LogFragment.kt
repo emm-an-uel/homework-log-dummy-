@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.homeworklog_dummy.databinding.FragmentLogBinding
 
 /**
@@ -29,8 +30,18 @@ class LogFragment : Fragment() {
 
     }
 
+    val args: LogFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // display new assignments
+        if (args.newAssignment == true) {
+            val subject = args.subject
+            val task = args.task
+            val dueDate = args.dueDate
+            val notes = args.notes
+        }
 
         // create new assignment
         binding.newAssignment.setOnClickListener() {

@@ -10,6 +10,8 @@
     <string name="hint_subject">Subject</string>
     <string name="hint_other_notes">Other Notes</string>
     <string name="hint_task">Task</string>
-    <string name="hint_due_date">Due Date: DD/MM/YY</string>
+    <string name="hint_due_date">Due Date:</string>
     <string name="confirm">confirm</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/LogFragment">
+    app:startDestination="@id/startFragment">
 
     <fragment
         android:id="@+id/LogFragment"
@@ -14,6 +14,25 @@
         <action
             android:id="@+id/action_LogFragment_to_InputFragment"
             app:destination="@id/InputFragment" />
+        <argument
+            android:name="subject"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="task"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="dueDate"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="notes"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="newAssignment"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/InputFragment"
@@ -23,6 +42,15 @@
 
         <action
             android:id="@+id/action_InputFragment_to_LogFragment"
+            app:destination="@id/LogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.homeworklog_dummy.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_LogFragment"
             app:destination="@id/LogFragment" />
     </fragment>
 </navigation>
