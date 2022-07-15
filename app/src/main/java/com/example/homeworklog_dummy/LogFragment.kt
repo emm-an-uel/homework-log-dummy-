@@ -1,19 +1,19 @@
 package com.example.homeworklog_dummy
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.homeworklog_dummy.databinding.FragmentSecondBinding
+import com.example.homeworklog_dummy.databinding.FragmentLogBinding
 
 /**
- * A simple [Fragment] subclass as the second destination in the navigation.
+ * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class SecondFragment : Fragment() {
+class LogFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentLogBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,7 +24,7 @@ class SecondFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentLogBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -32,6 +32,10 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // create new assignment
+        binding.newAssignment.setOnClickListener() {
+            findNavController().navigate(LogFragmentDirections.actionLogFragmentToInputFragment())
+        }
     }
 
     override fun onDestroyView() {

@@ -18,10 +18,6 @@ import com.example.homeworklog_dummy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private fun newTask(view: View) {
-        // create popup box with EditText to put homework name, date, notes
-
-    }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -38,9 +34,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.fab.setOnClickListener { view ->
-            newTask(view)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
