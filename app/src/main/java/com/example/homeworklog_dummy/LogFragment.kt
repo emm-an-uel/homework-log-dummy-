@@ -58,16 +58,7 @@ class LogFragment : Fragment() {
             textViewDueDate.text = dueDate
             textViewDueDate.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
 
-            // new horizontal linear layout to display subject, task, due date
-            val linearLayoutHorizontal = LinearLayout(context)
-            linearLayoutHorizontal.orientation = LinearLayout.HORIZONTAL
-
-            binding.linearLayout.addView(linearLayoutHorizontal)
-
-            // display 3 columns of info
-            linearLayoutHorizontal.addView(textViewSubject)
-            linearLayoutHorizontal.addView(textViewTask)
-            linearLayoutHorizontal.addView(textViewDueDate)
+            
         }
 
         // create new assignment
