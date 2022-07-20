@@ -15,22 +15,6 @@
             android:id="@+id/action_LogFragment_to_InputFragment"
             app:destination="@id/InputFragment" />
         <argument
-            android:name="subject"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="task"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="dueDate"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="notes"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
             android:name="newAssignment"
             app:argType="boolean" />
     </fragment>

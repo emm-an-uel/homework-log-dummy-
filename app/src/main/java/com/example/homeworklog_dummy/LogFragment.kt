@@ -42,11 +42,8 @@ class LogFragment : Fragment() {
 
         // display assignments
         if (args.newAssignment) {
-            // retrieve data from fragment_input
-            val subject = args.subject
-            val task = args.task
-            val dueDate = args.dueDate
-            val notes = args.notes
+            // retrieve data from local file
+            
 
             // create new horizontal linear layout
             val linearLayoutHoriz1 = LinearLayout(context)

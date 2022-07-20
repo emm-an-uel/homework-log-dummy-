@@ -1,5 +1,6 @@
 package com.example.homeworklog_dummy
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +8,33 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.homeworklog_dummy.databinding.FragmentInputBinding
+import java.io.File
 import java.util.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class InputFragment : Fragment() {
+
+    private fun storeLocally(subject : String, task : String, dueDate : String) {
+
+        // merge into string
+        val contentToFile = "$subject-$task-$dueDate"
+
+        // * store contentToFile into local file *
+
+        // determine number of existing files
+        val files : Array<String> = context!!.fileList()
+        val numFiles = files.size
+
+        // create new file
+        val fileName = "file$numFiles" // eg if there's no files, name is file0.
+        // if 1 file, name is file1
+        val fileContents = contentToFile
+        context!!.openFileOutput(fileName, Context.MODE_PRIVATE).use {
+            it.write(fileContents.toByteArray())
+        }
+    }
 
     private var _binding: FragmentInputBinding? = null
 
@@ -49,12 +71,13 @@ class InputFragment : Fragment() {
 
             val subject = binding.subject.text.toString()
             val task = binding.task.text.toString()
-            val notes = binding.notes.text.toString()
             val newAssignment = true
 
-            // sends subject, task, dueDate, notes to LogFragment and navigates there
-            val action = InputFragmentDirections.actionInputFragmentToLogFragment(subject, task, dueDate, notes, newAssignment)
-            findNavController().navigate(action)
+            // stores subject, task, notes in local file
+            storeLocally(subject, task, dueDate)
+
+            // navigate to fragment_log
+            findNavController().navigate(InputFragmentDirections.actionInputFragmentToLogFragment(newAssignment))
         }
     }
 
