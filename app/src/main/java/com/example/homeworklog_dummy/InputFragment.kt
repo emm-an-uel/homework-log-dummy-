@@ -71,13 +71,12 @@ class InputFragment : Fragment() {
 
             val subject = binding.subject.text.toString()
             val task = binding.task.text.toString()
-            val newAssignment = true
 
             // stores subject, task, notes in local file
             storeLocally(subject, task, dueDate)
 
             // navigate to fragment_log
-            findNavController().navigate(InputFragmentDirections.actionInputFragmentToLogFragment(newAssignment))
+            findNavController().navigate(InputFragmentDirections.actionInputFragmentToLogFragment())
         }
     }
 

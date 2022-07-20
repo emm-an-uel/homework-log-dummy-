@@ -37,7 +37,7 @@ class StartFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val newAssignment = false
-        val action = StartFragmentDirections.actionStartFragmentToLogFragment(null, null, null, null, newAssignment)
+        val action = StartFragmentDirections.actionStartFragmentToLogFragment()
         findNavController().navigate(action)
     }
 }
