@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.homeworklog_dummy.databinding.FragmentInputBinding
@@ -47,6 +46,7 @@ class InputFragment : Fragment() {
 
         // when button "confirm" is clicked
         binding.buttonConfirm.setOnClickListener() {
+
             val subject = binding.subject.text.toString()
             val task = binding.task.text.toString()
             val notes = binding.notes.text.toString()
