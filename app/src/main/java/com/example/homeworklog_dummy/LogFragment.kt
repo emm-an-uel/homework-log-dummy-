@@ -1,9 +1,12 @@
 package com.example.homeworklog_dummy
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -45,6 +48,16 @@ class LogFragment : Fragment() {
             val dueDate = args.dueDate
             val notes = args.notes
 
+            // create new horizontal linear layout
+            val linearLayoutHoriz1 = LinearLayout(context)
+            linearLayoutHoriz1.layoutParams = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                0,
+                3F // weight 3 to fit 3 text views
+            )
+            linearLayoutHoriz1.orientation = LinearLayout.HORIZONTAL // horizontal layout
+            binding.linearLayout.addView(linearLayoutHoriz1) // add horizontal layout to parent vertical layout
+
             // create new text views
             val textViewSubject = TextView(context)
             val textViewTask = TextView(context)
@@ -52,16 +65,36 @@ class LogFragment : Fragment() {
 
             // populate text views with data from fragment_input
             textViewSubject.text = subject
-            textViewSubject.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
+            textViewSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            textViewSubject.layoutParams = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                MATCH_PARENT,
+                1F // weight is set to 1F so all 3 text views are evenly distributed to take up the whole row
+            )
+
             textViewTask.text = task
             textViewTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
-            textViewDueDate.text = dueDate
-            textViewDueDate.textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+            textViewTask.layoutParams = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                MATCH_PARENT,
+                1F
+            )
 
-            
+            textViewDueDate.text = dueDate
+            textViewDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            textViewDueDate.layoutParams = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                MATCH_PARENT,
+                1F
+            )
+
+            // display 3 columns of info
+            linearLayoutHoriz1.addView(textViewSubject)
+            linearLayoutHoriz1.addView(textViewTask)
+            linearLayoutHoriz1.addView(textViewDueDate)
         }
 
-        // create new assignment
+        // button to create new assignment
         binding.newAssignment.setOnClickListener() {
             findNavController().navigate(LogFragmentDirections.actionLogFragmentToInputFragment())
         }
