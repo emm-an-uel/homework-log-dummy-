@@ -1,6 +1,7 @@
 package com.example.homeworklog_dummy
 
 import android.app.ActionBar
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,13 @@ class LogFragment : Fragment() {
             val task = args.task
             val dueDate = args.dueDate
             val notes = args.notes
+
+            // store data locally
+            val filename = "myfile"
+            val fileContents = "subject"
+            context!!.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                it.write(fileContents.toByteArray())
+            }
 
             // create new horizontal linear layout
             val linearLayoutHoriz1 = LinearLayout(context)
