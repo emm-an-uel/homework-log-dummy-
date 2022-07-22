@@ -36,8 +36,6 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val newAssignment = false
-        val action = StartFragmentDirections.actionStartFragmentToLogFragment()
-        findNavController().navigate(action)
+        findNavController().navigate(StartFragmentDirections.actionStartFragmentToLogFragment())
     }
 }

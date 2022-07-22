@@ -107,10 +107,8 @@ class LogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // display assignments if fileList exists
-        if (context!!.fileList() != null) {
-            displayAssignments(view)
-        }
+        // display assignments
+        displayAssignments(view)
 
         // button to create new assignment
         binding.newAssignment.setOnClickListener() {
