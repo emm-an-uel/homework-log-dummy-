@@ -36,6 +36,8 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // try creating a new file to initiate it? 
+
         findNavController().navigate(StartFragmentDirections.actionStartFragmentToLogFragment())
     }
 }
