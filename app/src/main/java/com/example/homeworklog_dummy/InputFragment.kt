@@ -16,10 +16,33 @@ import java.util.*
  */
 class InputFragment : Fragment() {
 
-    private fun storeLocally(subject : String, task : String, dueDate : String) {
+    private fun sortDueDate(day: Int, month: Int, year: Int): Int {
+        // * dueDateSort will be in format YYYYMMDD for easy sorting of due dates *
+
+        var monthString = month.toString()
+        var dayString = day.toString()
+
+        // ensure proper MM format
+        if (month < 10) {
+            monthString = "0$month" // eg convert "8" to "08"
+        }
+
+        // ensure proper DD format
+        if (day < 10) {
+            dayString = "0$day"
+        }
+
+        // convert to YYYYMMDD format
+        val dateString = "$year$monthString$dayString"
+        val dateInt = dateString.toInt() // return integer so it can be sorted
+
+        return(dateInt)
+    }
+
+    private fun storeLocally(subject : String, task : String, dueDate : String, dateInt: Int) {
 
         // merge into string
-        val contentToFile = "$subject-$task-$dueDate"
+        val fileContents = "$subject-$task-$dueDate-$dateInt"
 
         // * store contentToFile into local file *
 
@@ -28,9 +51,7 @@ class InputFragment : Fragment() {
         val numFiles = files.size
 
         // create new file
-        val fileName = "file$numFiles" // eg if there's no files, name is file0.
-        // if 1 file, name is file1
-        val fileContents = contentToFile
+        val fileName = "file$numFiles" // eg if there's 1 file, name is "file1"
         context!!.openFileOutput(fileName, Context.MODE_PRIVATE).use {
             it.write(fileContents.toByteArray())
         }
@@ -56,6 +77,7 @@ class InputFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         var dueDate = ""
+        var dateInt = 0
 
         // datePicker stuff
         val today = Calendar.getInstance()
@@ -64,6 +86,9 @@ class InputFragment : Fragment() {
         ) { view, year, month, day ->
                 val month = month + 1
                 dueDate = "$day $month $year"
+
+                // sort by due date
+                dateInt = sortDueDate(day, month, year)
             }
 
         // when button "confirm" is clicked
@@ -73,7 +98,7 @@ class InputFragment : Fragment() {
             val task = binding.task.text.toString()
 
             // stores subject, task, notes in local file
-            storeLocally(subject, task, dueDate)
+            storeLocally(subject, task, dueDate, dateInt)
 
             // navigate to fragment_log
             findNavController().navigate(InputFragmentDirections.actionInputFragmentToLogFragment())
