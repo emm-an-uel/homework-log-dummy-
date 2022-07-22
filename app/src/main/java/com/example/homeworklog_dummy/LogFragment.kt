@@ -19,12 +19,8 @@ import java.io.File
  */
 class LogFragment : Fragment() {
 
-    private fun displayAssignments(view: View) {
+    private fun displayAssignments(numFiles: Int) {
         // * access data from local file *
-
-        // determine number of existing files
-        val files : Array<String> = context!!.fileList()
-        val numFiles = files.size
 
         // display each file in a new row
         var n = 1 // first file is "rList" so file naming starts with "file1"
@@ -107,8 +103,14 @@ class LogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // display assignments
-        displayAssignments(view)
+        // * display assignments *
+        // determine number of existing files
+        val files : Array<String> = context!!.fileList()
+        val numFiles = files.size
+
+        if (numFiles > 1) { // first file is rList which does not have array index 0-2 as required by displayAssignments
+            displayAssignments(numFiles)
+        }
 
         // button to create new assignment
         binding.newAssignment.setOnClickListener() {

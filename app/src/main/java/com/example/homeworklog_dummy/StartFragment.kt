@@ -1,5 +1,6 @@
 package com.example.homeworklog_dummy
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,8 +36,6 @@ class StartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // try creating a new file to initiate it? 
 
         findNavController().navigate(StartFragmentDirections.actionStartFragmentToLogFragment())
     }
