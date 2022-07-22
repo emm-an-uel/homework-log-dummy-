@@ -21,7 +21,6 @@ class LogFragment : Fragment() {
     private fun sortAssignments(numFiles: Int): List<String> {
 
         val assignmentsMap = mutableMapOf<Int, String>() // initialize mutableMap for sorting by due date
-        val assignmentsList = mutableListOf<String>() // to be returned to main function
 
         // * access data from local files and put into assignmentsMap *
         var n = 1 // first file is "rList" so file naming starts with "file1"
@@ -85,6 +84,7 @@ class LogFragment : Fragment() {
 
             // populate text views with local data retrieved above
             textViewSubject.text = subject
+            textViewSubject.textSize = 18F
             textViewSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textViewSubject.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
@@ -93,6 +93,7 @@ class LogFragment : Fragment() {
             )
 
             textViewTask.text = task
+            textViewTask.textSize = 18F
             textViewTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textViewTask.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
@@ -101,6 +102,7 @@ class LogFragment : Fragment() {
             )
 
             textViewDueDate.text = dueDate
+            textViewDueDate.textSize = 18F
             textViewDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textViewDueDate.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
