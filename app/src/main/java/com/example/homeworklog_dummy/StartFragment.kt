@@ -1,5 +1,6 @@
 package com.example.homeworklog_dummy
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -36,8 +37,6 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val newAssignment = false
-        val action = StartFragmentDirections.actionStartFragmentToLogFragment(null, null, null, null, newAssignment)
-        findNavController().navigate(action)
+        findNavController().navigate(StartFragmentDirections.actionStartFragmentToLogFragment())
     }
 }
