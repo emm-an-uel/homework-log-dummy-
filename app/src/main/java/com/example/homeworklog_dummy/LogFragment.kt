@@ -1,6 +1,5 @@
 package com.example.homeworklog_dummy
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.homeworklog_dummy.databinding.FragmentLogBinding
 import java.io.File
 
@@ -25,7 +23,7 @@ class LogFragment : Fragment() {
         // display each file in a new row
         var n = 1 // first file is "rList" so file naming starts with "file1"
         while (n < numFiles) {
-            val file = File(context!!.filesDir, "file$n").readText() // eg retrieve file1
+            val file = File(context!!.filesDir, "file$n").readText() // eg access file1
 
             // convert "file" from string to list
             val list : List<String> = file.split("-").toList()
@@ -34,6 +32,7 @@ class LogFragment : Fragment() {
             val subject = list[0]
             val task = list[1]
             val dueDate = list[2]
+            val dueDateInt = list[3]
 
             // create new horizontal linear layout
             val linearLayoutHorizontal = LinearLayout(context)
@@ -108,7 +107,7 @@ class LogFragment : Fragment() {
         val files : Array<String> = context!!.fileList()
         val numFiles = files.size
 
-        if (numFiles > 1) { // first file is rList which does not have array index 0-2 as required by displayAssignments
+        if (numFiles > 1) { // first file is rList which does not have items as required by displayAssignments
             displayAssignments(numFiles)
         }
 
