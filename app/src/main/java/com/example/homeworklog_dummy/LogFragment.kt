@@ -11,19 +11,22 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.homeworklog_dummy.databinding.FragmentLogBinding
 import java.io.File
+import java.util.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class LogFragment : Fragment() {
 
-    private fun displayAssignments(numFiles: Int) {
-        // * access data from local file *
+    private fun sortAssignments(numFiles: Int): List<String> {
 
-        // display each file in a new row
+        val assignmentsMap = mutableMapOf<Int, String>() // initialize mutableMap for sorting by due date
+        val assignmentsList = mutableListOf<String>() // to be returned to main function
+
+        // * access data from local files and put into assignmentsMap *
         var n = 1 // first file is "rList" so file naming starts with "file1"
         while (n < numFiles) {
-            val file = File(context!!.filesDir, "file$n").readText() // eg access file1
+            val file = File(context!!.filesDir, "file$n").readText() // access each file
 
             // convert "file" from string to list
             val list : List<String> = file.split("-").toList()
@@ -32,7 +35,38 @@ class LogFragment : Fragment() {
             val subject = list[0]
             val task = list[1]
             val dueDate = list[2]
-            val dueDateInt = list[3]
+            val dueDateInt = list[3].toInt()
+
+            // put (dueDateInt, subTaskDate) into assignmentsMap
+            val subTaskDate = "$subject-$task-$dueDate"
+            assignmentsMap.put(dueDateInt, subTaskDate)
+
+            n ++
+        }
+
+        // * sort assignmentsMap by due date *
+        val sortedAssignmentsMap: MutableMap<Int, String> = TreeMap(assignmentsMap)
+
+        // * compile sorted values (subTaskDate)'s into a list to be returned *
+        val subTaskDateList: List<String> = sortedAssignmentsMap.values.toList()
+
+        return subTaskDateList // list of "subject-task-dueDate" sorted according to due date
+    }
+
+    private fun displayAssignments(sortedSubTaskDateList: List<String>) {
+        // * access data from local file *
+
+        // display each file in a new row
+        var n = 0
+        while (n < sortedSubTaskDateList.size) {
+
+            // convert "sortedSubTaskDateList[n]" from string to list
+            val list : List<String> = sortedSubTaskDateList[n].split("-").toList()
+
+            // assign variable to each item in list
+            val subject = list[0]
+            val task = list[1]
+            val dueDate = list[2]
 
             // create new horizontal linear layout
             val linearLayoutHorizontal = LinearLayout(context)
@@ -108,7 +142,9 @@ class LogFragment : Fragment() {
         val numFiles = files.size
 
         if (numFiles > 1) { // first file is rList which does not have items as required by displayAssignments
-            displayAssignments(numFiles)
+            
+            val sortedSubTaskDateList = sortAssignments(numFiles) // this should return a sorted list
+            displayAssignments(sortedSubTaskDateList) // pass a sorted list to the function, function displays each item in fragment_log
         }
 
         // button to create new assignment

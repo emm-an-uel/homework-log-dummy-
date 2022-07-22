@@ -42,7 +42,7 @@ class InputFragment : Fragment() {
     private fun storeLocally(subject : String, task : String, dueDate : String, dateInt: Int) {
 
         // merge into string
-        val contentToFile = "$subject-$task-$dueDate-$dateInt"
+        val fileContents = "$subject-$task-$dueDate-$dateInt"
 
         // * store contentToFile into local file *
 
@@ -51,9 +51,7 @@ class InputFragment : Fragment() {
         val numFiles = files.size
 
         // create new file
-        val fileName = "file$numFiles" // eg if there's no files, name is file0.
-        // if 1 file, name is file1
-        val fileContents = contentToFile
+        val fileName = "file$numFiles" // eg if there's 1 file, name is "file1"
         context!!.openFileOutput(fileName, Context.MODE_PRIVATE).use {
             it.write(fileContents.toByteArray())
         }
