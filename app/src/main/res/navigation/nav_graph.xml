@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/LogFragment"
+        android:name="com.example.homeworklog_dummy.LogFragment"
+        android:label="@string/main_fragment_label"
+        tools:layout="@layout/fragment_log">
+
+        <action
+            android:id="@+id/action_LogFragment_to_InputFragment"
+            app:destination="@id/InputFragment" />
+        <action
+            android:id="@+id/action_LogFragment_to_startFragment"
+            app:destination="@id/startFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/InputFragment"
+        android:name="com.example.homeworklog_dummy.InputFragment"
+        android:label="@string/input_fragment_label"
+        tools:layout="@layout/fragment_input">
+
+        <action
+            android:id="@+id/action_InputFragment_to_LogFragment"
+            app:destination="@id/LogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.homeworklog_dummy.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/action_startFragment_to_LogFragment"
+            app:destination="@id/LogFragment" />
+    </fragment>
+</navigation>
