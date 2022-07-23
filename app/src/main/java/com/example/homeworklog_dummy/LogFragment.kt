@@ -1,12 +1,17 @@
 package com.example.homeworklog_dummy
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.homeworklog_dummy.databinding.FragmentLogBinding
@@ -17,6 +22,29 @@ import java.util.*
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class LogFragment : Fragment() {
+
+    private fun markAsDone(subTaskDate: String) {
+        // run through existing files to find the one with content
+        // "subTaskDate" and delete that file
+        // File(fileName).readLines()
+
+        val files : Array<String> = context!!.fileList()
+        val numFiles = files.size
+        var n = 1
+        while (n < numFiles) {
+            val fileName = "file$n"
+            var fileContents = File(context!!.filesDir, fileName).readText()
+            fileContents = fileContents.dropLast(9)
+
+            if (fileContents == subTaskDate) {
+                context!!.deleteFile(fileName)
+                findNavController().navigate(LogFragmentDirections.actionLogFragmentToStartFragment()) // refresh
+                break
+            }
+
+            n ++
+        }
+    }
 
     private fun sortAssignments(numFiles: Int): List<String> {
 
@@ -55,12 +83,13 @@ class LogFragment : Fragment() {
     private fun displayAssignments(sortedSubTaskDateList: List<String>) {
         // * access data from local file *
 
-        // display each file in a new row
+        // display each subTaskDate in a new row
         var n = 0
         while (n < sortedSubTaskDateList.size) {
 
             // convert "sortedSubTaskDateList[n]" from string to list
-            val list : List<String> = sortedSubTaskDateList[n].split("-").toList()
+            val subTaskDate = sortedSubTaskDateList[n]
+            val list : List<String> = subTaskDate.split("-").toList()
 
             // assign variable to each item in list
             val subject = list[0]
@@ -72,7 +101,7 @@ class LogFragment : Fragment() {
             linearLayoutHorizontal.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
                 0,
-                3F // weight 3 to fit 3 text views
+                4F // weight 4 to fit 3 text views + 1 button
             )
             linearLayoutHorizontal.orientation = LinearLayout.HORIZONTAL // horizontal layout
             binding.linearLayout.addView(linearLayoutHorizontal) // add horizontal layout to parent vertical layout
@@ -82,10 +111,10 @@ class LogFragment : Fragment() {
             val textViewTask = TextView(context)
             val textViewDueDate = TextView(context)
 
-            // populate text views with local data retrieved above
+            // * populate text views with local data retrieved above *
             textViewSubject.text = subject
             textViewSubject.textSize = 18F
-            textViewSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            textViewSubject.gravity = Gravity.CENTER
             textViewSubject.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
                 MATCH_PARENT,
@@ -94,6 +123,7 @@ class LogFragment : Fragment() {
 
             textViewTask.text = task
             textViewTask.textSize = 18F
+            textViewTask.gravity = Gravity.CENTER
             textViewTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textViewTask.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
@@ -103,6 +133,7 @@ class LogFragment : Fragment() {
 
             textViewDueDate.text = dueDate
             textViewDueDate.textSize = 18F
+            textViewDueDate.gravity = Gravity.CENTER
             textViewDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textViewDueDate.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
@@ -110,10 +141,25 @@ class LogFragment : Fragment() {
                 1F
             )
 
-            // display 3 columns of info
+            // * create button to mark as done *
+            val buttonDone = Button(context)
+            buttonDone.setOnClickListener() {
+                markAsDone(subTaskDate)
+            }
+            buttonDone.layoutParams = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                MATCH_PARENT,
+                1F
+            )
+            buttonDone.text = "done"
+            buttonDone.textSize = 13F
+            buttonDone.setTextColor(Color.WHITE)
+
+            // display 3 columns of info + 1 button
             linearLayoutHorizontal.addView(textViewSubject)
             linearLayoutHorizontal.addView(textViewTask)
             linearLayoutHorizontal.addView(textViewDueDate)
+            linearLayoutHorizontal.addView(buttonDone)
 
             n++
         }
@@ -150,7 +196,7 @@ class LogFragment : Fragment() {
         }
 
         // button to create new assignment
-        binding.newAssignment.setOnClickListener() {
+        binding.newAssignment.setOnClickListener {
             findNavController().navigate(LogFragmentDirections.actionLogFragmentToInputFragment())
         }
     }
