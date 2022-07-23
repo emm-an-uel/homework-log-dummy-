@@ -23,6 +23,29 @@ import java.util.*
  */
 class LogFragment : Fragment() {
 
+    private fun markAsDone(subTaskDate: String) {
+        // run through existing files to find the one with content
+        // "subTaskDate" and delete that file
+        // File(fileName).readLines()
+
+        val files : Array<String> = context!!.fileList()
+        val numFiles = files.size
+        var n = 1
+        while (n < numFiles) {
+            val fileName = "file$n"
+            var fileContents = File(context!!.filesDir, fileName).readText()
+            fileContents = fileContents.dropLast(9)
+
+            if (fileContents == subTaskDate) {
+                context!!.deleteFile(fileName)
+                findNavController().navigate(LogFragmentDirections.actionLogFragmentToStartFragment()) // refresh
+                break
+            }
+
+            n ++
+        }
+    }
+
     private fun sortAssignments(numFiles: Int): List<String> {
 
         val assignmentsMap = mutableMapOf<Int, String>() // initialize mutableMap for sorting by due date
@@ -60,12 +83,13 @@ class LogFragment : Fragment() {
     private fun displayAssignments(sortedSubTaskDateList: List<String>) {
         // * access data from local file *
 
-        // display each file in a new row
+        // display each subTaskDate in a new row
         var n = 0
         while (n < sortedSubTaskDateList.size) {
 
             // convert "sortedSubTaskDateList[n]" from string to list
-            val list : List<String> = sortedSubTaskDateList[n].split("-").toList()
+            val subTaskDate = sortedSubTaskDateList[n]
+            val list : List<String> = subTaskDate.split("-").toList()
 
             // assign variable to each item in list
             val subject = list[0]
@@ -119,6 +143,9 @@ class LogFragment : Fragment() {
 
             // * create button to mark as done *
             val buttonDone = Button(context)
+            buttonDone.setOnClickListener() {
+                markAsDone(subTaskDate)
+            }
             buttonDone.layoutParams = LinearLayout.LayoutParams(
                 MATCH_PARENT,
                 MATCH_PARENT,
