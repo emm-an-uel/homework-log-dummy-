@@ -26,10 +26,6 @@ class LogFragment : Fragment() {
     private fun markAsDone(subTaskDate: String) {
         // run through existing files to find the one with content
         // "subTaskDate" and delete that file
-<<<<<<< HEAD
-=======
-        // File(fileName).readLines()
->>>>>>> 4155dc79bc46fdf5fce8b965f11689f9aab9ea8b
 
         val files : Array<String> = context!!.fileList()
         val numFiles = files.size
