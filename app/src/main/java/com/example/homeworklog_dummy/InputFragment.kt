@@ -39,7 +39,7 @@ class InputFragment : Fragment() {
         return(dateInt)
     }
 
-    private fun storeLocally(subject : String, task : String, dueDate : String, dateInt: Int) {
+    private fun storeLocally(subject : String, task : String, dueDate : String, dateInt: Int, status: Boolean) {
 
         // merge into string
         val fileContents = "$subject-$task-$dueDate-$dateInt"
@@ -96,9 +96,10 @@ class InputFragment : Fragment() {
 
             val subject = binding.subject.text.toString()
             val task = binding.task.text.toString()
+            val status = false // false = undone, true = done
 
             // stores subject, task, notes in local file
-            storeLocally(subject, task, dueDate, dateInt)
+            storeLocally(subject, task, dueDate, dateInt, status)
 
             // navigate to fragment_log
             findNavController().navigate(InputFragmentDirections.actionInputFragmentToLogFragment())
