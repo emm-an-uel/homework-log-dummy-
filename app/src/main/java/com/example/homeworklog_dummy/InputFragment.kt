@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.JsonReader
 import com.example.homeworklog_dummy.databinding.FragmentInputBinding
 import java.io.File
+import java.io.StringReader
 import java.util.*
 
 /**
@@ -16,7 +19,7 @@ import java.util.*
  */
 class InputFragment : Fragment() {
 
-    private fun sortDueDate(day: Int, month: Int, year: Int): Int {
+    private fun createDateInt(day: Int, month: Int, year: Int): Int {
         // * dueDateSort will be in format YYYYMMDD for easy sorting of due dates *
 
         var monthString = month.toString()
@@ -41,19 +44,55 @@ class InputFragment : Fragment() {
 
     private fun storeLocally(subject : String, task : String, dueDate : String, dateInt: Int, status: Boolean) {
 
-        // merge into string
-        val fileContents = "$subject-$task-$dueDate-$dateInt"
+        // create val "assignment" using Class "Assignment" parameters
+        val newAssignment = Assignment(subject, task, dueDate, dateInt, status)
 
-        // * store contentToFile into local file *
+        // check if there's existing "fileAssignments"
+        var fileExists = false
+        val files = context!!.fileList()
+        for (file in files) {
+            if (file == "fileAssignment") {
+                fileExists = true
+                break
+            }
+        }
 
-        // determine number of existing files
-        val files : Array<String> = context!!.fileList()
-        val numFiles = files.size
+        if (fileExists) { // if there's existing "fileAssignments"
 
-        // create new file
-        val fileName = "file$numFiles" // eg if there's 1 file, name is "file1"
-        context!!.openFileOutput(fileName, Context.MODE_PRIVATE).use {
-            it.write(fileContents.toByteArray())
+            val listAssignments = arrayListOf<Assignment>()
+
+            // read json
+            val fileJson = File(context!!.filesDir, "fileAssignment").readText()
+
+            // add all items in fileJson into listAssignments
+            JsonReader(StringReader(fileJson)).use { reader ->
+                reader.beginArray {
+                    while (reader.hasNext()) {
+                        val assignment = Klaxon().parse<Assignment>(reader)
+                        listAssignments.add(assignment!!)
+                    }
+                }
+            }
+
+            // add newAssignment and serialize listAssignments
+            listAssignments.add(newAssignment)
+            val updatedFile = Klaxon().toJsonString(listAssignments)
+
+            // store in local file
+            context!!.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+                it.write(updatedFile.toByteArray())
+            }
+
+        } else { // if "fileAssignment" does not exist
+
+            // new val listAssignment, add newAssignment and serialize listAssignments
+            val listAssignment = mutableListOf<Assignment>(newAssignment)
+            val updatedFile = Klaxon().toJsonString(listAssignment)
+
+            // store in local file
+            context!!.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+                it.write(updatedFile.toByteArray())
+            }
         }
     }
 
@@ -88,7 +127,7 @@ class InputFragment : Fragment() {
                 dueDate = "$day $month $year"
 
                 // sort by due date
-                dateInt = sortDueDate(day, month, year)
+                dateInt = createDateInt(day, month, year)
             }
 
         // when button "confirm" is clicked

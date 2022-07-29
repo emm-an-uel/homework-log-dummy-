@@ -1,22 +1,19 @@
 package com.example.homeworklog_dummy
 
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.TableRow
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.beust.klaxon.Klaxon
+import com.beust.klaxon.JsonReader
 import com.example.homeworklog_dummy.databinding.FragmentLogBinding
 import java.io.File
-import java.util.*
+import java.io.StringReader
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -46,120 +43,60 @@ class LogFragment : Fragment() {
         }
     }
 
-    private fun sortAssignments(numFiles: Int): List<String> {
+    private fun sortAssignments(): List<Assignment> {
 
-        val assignmentsMap = mutableMapOf<Int, String>() // initialize mutableMap for sorting by due date
+        // read json file
+        val listAssignments = arrayListOf<Assignment>()
+        val fileJson = File(context!!.filesDir, "fileAssignment").readText()
 
-        // * access data from local files and put into assignmentsMap *
-        var n = 1 // first file is "rList" so file naming starts with "file1"
-        while (n < numFiles) {
-            val file = File(context!!.filesDir, "file$n").readText() // access each file
+        // add undone assignments from fileJson to listAssignments
+        JsonReader(StringReader(fileJson)).use { reader ->
+            reader.beginArray {
+                while (reader.hasNext()) {
+                    val assignment = Klaxon().parse<Assignment>(reader)
 
-            // convert "file" from string to list
-            val list : List<String> = file.split("-").toList()
-
-            // assign variable to each item in list
-            val subject = list[0]
-            val task = list[1]
-            val dueDate = list[2]
-            val dueDateInt = list[3].toInt()
-
-            // put (dueDateInt, subTaskDate) into assignmentsMap
-            val subTaskDate = "$subject-$task-$dueDate"
-            assignmentsMap.put(dueDateInt, subTaskDate)
-
-            n ++
+                    if (!assignment!!.status) { // if assignment is undone
+                        listAssignments.add(assignment)
+                    }
+                }
+            }
         }
 
-        // * sort assignmentsMap by due date *
-        val sortedAssignmentsMap: MutableMap<Int, String> = TreeMap(assignmentsMap)
-
-        // * compile sorted values (subTaskDate)'s into a list to be returned *
-        val subTaskDateList: List<String> = sortedAssignmentsMap.values.toList()
-
-        return subTaskDateList // list of "subject-task-dueDate" sorted according to due date
+        // sort by dueDateInt and return
+        return listAssignments.sortedBy { it.dateInt }
     }
 
-    private fun displayAssignments(sortedSubTaskDateList: List<String>) {
-        // * access data from local file *
-
-        // display each subTaskDate in a new row
+    private fun displayAssignments(sortedAssignmentsList: List<Assignment>) {
         var n = 0
-        while (n < sortedSubTaskDateList.size) {
+        while (n < sortedAssignmentsList.size) {
+            val assignment = sortedAssignmentsList[n]
+            val subject = assignment.subject
+            val task = assignment.task
+            val dueDate = assignment.dueDate
 
-            // convert "sortedSubTaskDateList[n]" from string to list
-            val subTaskDate = sortedSubTaskDateList[n]
-            val list : List<String> = subTaskDate.split("-").toList()
+            // display subject, task, dueDate in new table row & add btnDone
+            val tableRow = TableRow(context)
+            val tvSubject = TextView(context)
+            val tvTask = TextView(context)
+            val tvDueDate = TextView(context)
 
-            // assign variable to each item in list
-            val subject = list[0]
-            val task = list[1]
-            val dueDate = list[2]
+            tvSubject.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
+            tvTask.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
+            tvDueDate.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
 
-            // create new horizontal linear layout
-            val linearLayoutHorizontal = LinearLayout(context)
-            linearLayoutHorizontal.layoutParams = LinearLayout.LayoutParams(
-                MATCH_PARENT,
-                0,
-                4F // weight 4 to fit 3 text views + 1 button
-            )
-            linearLayoutHorizontal.orientation = LinearLayout.HORIZONTAL // horizontal layout
-            binding.linearLayout.addView(linearLayoutHorizontal) // add horizontal layout to parent vertical layout
+            tvSubject.text = subject
+            tvTask.text = task
+            tvDueDate.text = dueDate
 
-            // create new text views
-            val textViewSubject = TextView(context)
-            val textViewTask = TextView(context)
-            val textViewDueDate = TextView(context)
+            tableRow.addView(tvSubject)
+            tableRow.addView(tvTask)
+            tableRow.addView(tvDueDate)
 
-            // * populate text views with local data retrieved above *
-            textViewSubject.text = subject
-            textViewSubject.textSize = 18F
-            textViewSubject.gravity = Gravity.CENTER
-            textViewSubject.layoutParams = LinearLayout.LayoutParams(
-                MATCH_PARENT,
-                MATCH_PARENT,
-                1F // weight is set to 1F so all 3 text views are evenly distributed to take up the whole row
-            )
+            val btnDone = Button(context)
+            // TODO: ADD btnDone AND ITS FUNCTIONALITIES 
 
-            textViewTask.text = task
-            textViewTask.textSize = 18F
-            textViewTask.gravity = Gravity.CENTER
-            textViewTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
-            textViewTask.layoutParams = LinearLayout.LayoutParams(
-                MATCH_PARENT,
-                MATCH_PARENT,
-                1F
-            )
-
-            textViewDueDate.text = dueDate
-            textViewDueDate.textSize = 18F
-            textViewDueDate.gravity = Gravity.CENTER
-            textViewDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
-            textViewDueDate.layoutParams = LinearLayout.LayoutParams(
-                MATCH_PARENT,
-                MATCH_PARENT,
-                1F
-            )
-
-            // * create button to mark as done *
-            val buttonDone = Button(context)
-            buttonDone.setOnClickListener() {
-                markAsDone(subTaskDate)
-            }
-            buttonDone.layoutParams = LinearLayout.LayoutParams(
-                MATCH_PARENT,
-                MATCH_PARENT,
-                1F
-            )
-            buttonDone.text = "done"
-            buttonDone.textSize = 13F
-            buttonDone.setTextColor(Color.WHITE)
-
-            // display 3 columns of info + 1 button
-            linearLayoutHorizontal.addView(textViewSubject)
-            linearLayoutHorizontal.addView(textViewTask)
-            linearLayoutHorizontal.addView(textViewDueDate)
-            linearLayoutHorizontal.addView(buttonDone)
+            // add tableRow into tbAssignments
+            binding.tbAssignments.addView(tableRow)
 
             n++
         }
@@ -191,8 +128,8 @@ class LogFragment : Fragment() {
 
         if (numFiles > 1) { // first file is rList which does not have items as required by displayAssignments
             
-            val sortedSubTaskDateList = sortAssignments(numFiles) // this should return a sorted list
-            displayAssignments(sortedSubTaskDateList) // pass a sorted list to the function, function displays each item in fragment_log
+            val sortedAssignmentsList = sortAssignments() // returns sorted list
+            displayAssignments(sortedAssignmentsList) // pass a sorted list to the function, function displays each item in fragment_log
         }
 
         // button to create new assignment
