@@ -1,5 +1,7 @@
 package com.example.homeworklog_dummy
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,41 +11,66 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.JsonReader
+import com.beust.klaxon.Klaxon
 import com.example.homeworklog_dummy.databinding.FragmentLogBinding
 import java.io.File
 import java.io.StringReader
+
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class LogFragment : Fragment() {
 
-    private fun markAsDone(subTaskDate: String) {
-        // run through existing files to find the one with content
-        // "subTaskDate" and delete that file
-        // File(fileName).readLines()
+    private fun storeJson(completedAssignment: Assignment) {
+        val listAssignments = arrayListOf<Assignment>()
 
-        val files : Array<String> = context!!.fileList()
-        val numFiles = files.size
-        var n = 1
-        while (n < numFiles) {
-            val fileName = "file$n"
-            var fileContents = File(context!!.filesDir, fileName).readText()
-            fileContents = fileContents.dropLast(9)
+        // read json
+        val fileJson = File(context!!.filesDir, "fileAssignment").readText()
 
-            if (fileContents == subTaskDate) {
-                context!!.deleteFile(fileName)
-                findNavController().navigate(LogFragmentDirections.actionLogFragmentToStartFragment()) // refresh
+        // add all items in fileJson into listAssignments
+        JsonReader(StringReader(fileJson)).use { reader ->
+            reader.beginArray {
+                while (reader.hasNext()) {
+                    val assignment = Klaxon().parse<Assignment>(reader)
+                    listAssignments.add(assignment!!)
+                }
+            }
+        }
+
+        // remove old assignment
+        var n = 0
+        while (n < listAssignments.size) {
+            val assignment = listAssignments[n]
+            if (assignment == completedAssignment) { // TODO: assignment is never == completedAssignment 
+                listAssignments.removeAt(n)
                 break
             }
 
-            n ++
+            n++
+        }
+
+        // change to reflect "done"
+        completedAssignment.status = true
+        listAssignments.add(completedAssignment)
+
+        // save locally
+        val updatedFile = Klaxon().toJsonString(listAssignments)
+        context!!.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+            it.write(updatedFile.toByteArray())
         }
     }
 
-    private fun sortAssignments(): List<Assignment> {
+    private fun markAsDone(assignment: Assignment) {
+
+        storeJson(assignment)
+
+        // refresh fragment
+        sortAssignments()
+    }
+
+    private fun sortAssignments() {
 
         // read json file
         val listAssignments = arrayListOf<Assignment>()
@@ -55,7 +82,7 @@ class LogFragment : Fragment() {
                 while (reader.hasNext()) {
                     val assignment = Klaxon().parse<Assignment>(reader)
 
-                    if (!assignment!!.status) { // if assignment is undone
+                    if (!assignment!!.status) { // if status == false (assignment is undone)
                         listAssignments.add(assignment)
                     }
                 }
@@ -63,7 +90,7 @@ class LogFragment : Fragment() {
         }
 
         // sort by dueDateInt and return
-        return listAssignments.sortedBy { it.dateInt }
+        displayAssignments(listAssignments.sortedBy { it.dateInt })
     }
 
     private fun displayAssignments(sortedAssignmentsList: List<Assignment>) {
@@ -84,6 +111,10 @@ class LogFragment : Fragment() {
             tvTask.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
             tvDueDate.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
 
+            tvSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            tvTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            tvDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
             tvSubject.text = subject
             tvTask.text = task
             tvDueDate.text = dueDate
@@ -93,7 +124,12 @@ class LogFragment : Fragment() {
             tableRow.addView(tvDueDate)
 
             val btnDone = Button(context)
-            // TODO: ADD btnDone AND ITS FUNCTIONALITIES 
+            btnDone.text = "done"
+            btnDone.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
+            tableRow.addView(btnDone)
+            btnDone.setOnClickListener {
+                markAsDone(assignment)
+            }
 
             // add tableRow into tbAssignments
             binding.tbAssignments.addView(tableRow)
@@ -128,8 +164,7 @@ class LogFragment : Fragment() {
 
         if (numFiles > 1) { // first file is rList which does not have items as required by displayAssignments
             
-            val sortedAssignmentsList = sortAssignments() // returns sorted list
-            displayAssignments(sortedAssignmentsList) // pass a sorted list to the function, function displays each item in fragment_log
+            sortAssignments() // returns sorted list
         }
 
         // button to create new assignment
