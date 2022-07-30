@@ -50,12 +50,12 @@ class CompletedAssignmentsFragment : Fragment() {
         var n = 0
         while (n < sortedAssignmentsList.size) {
             val assignment = sortedAssignmentsList[n]
-            if (assignment.status) { // if status == true (ie done) 
+            if (assignment.status) { // if status == true (ie done)
                 val subject = assignment.subject
                 val task = assignment.task
                 val dueDate = assignment.dueDate
 
-                // display subject, task, dueDate in new table row & add btnDone
+                // display subject, task, dueDate in new table row & add btnDelete
                 val tableRow = TableRow(context)
                 val tvSubject = TextView(context)
                 val tvTask = TextView(context)
@@ -87,7 +87,7 @@ class CompletedAssignmentsFragment : Fragment() {
                 tableRow.addView(tvDueDate)
 
                 val btnDelete = Button(context)
-                btnDelete.text = "done"
+                btnDelete.text = "delete"
                 btnDelete.layoutParams = TableRow.LayoutParams(
                     0,
                     TableRow.LayoutParams.WRAP_CONTENT, 1f

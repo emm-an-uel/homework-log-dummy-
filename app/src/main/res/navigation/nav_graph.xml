@@ -34,7 +34,7 @@
     <fragment
         android:id="@+id/startFragment"
         android:name="com.example.homeworklog_dummy.StartFragment"
-        android:label="fragment_start"
+        android:label=""
         tools:layout="@layout/fragment_start" >
         <action
             android:id="@+id/action_startFragment_to_LogFragment"
@@ -43,7 +43,7 @@
     <fragment
         android:id="@+id/completedAssignmentsFragment"
         android:name="com.example.homeworklog_dummy.CompletedAssignmentsFragment"
-        android:label="fragment_completed_assignments"
+        android:label="@string/main_fragment_label"
         tools:layout="@layout/fragment_completed_assignments" >
         <action
             android:id="@+id/action_completedAssignmentsFragment_to_LogFragment"
