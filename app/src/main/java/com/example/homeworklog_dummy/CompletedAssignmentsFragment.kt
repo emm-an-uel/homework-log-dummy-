@@ -1,5 +1,6 @@
 package com.example.homeworklog_dummy
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,8 +23,30 @@ import java.io.StringReader
  */
 class CompletedAssignmentsFragment : Fragment() {
 
-    private fun deleteAssignment(assignment: Assignment, sortedAssignmentsList: List<Assignment>) {
+    private fun deleteAssignment(deletedAssignment: Assignment, sortedAssignmentsList: List<Assignment>) {
 
+        // transfer every assignment from sortedAssignmentsList into array "assignmentsList"
+        val assignmentsList = arrayListOf<Assignment>()
+        for (assignment in sortedAssignmentsList) {
+            assignmentsList.add(assignment)
+        }
+
+        // find deletedAssignment by id and remove
+        for (assignment in assignmentsList) {
+            if (deletedAssignment.id == assignment.id) {
+                assignmentsList.remove(assignment)
+                break
+            }
+        }
+
+        // save locally
+        val updatedFile = Klaxon().toJsonString(assignmentsList)
+        context!!.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+            it.write(updatedFile.toByteArray())
+        }
+
+        // refresh fragment
+        findNavController().navigate(CompletedAssignmentsFragmentDirections.actionCompletedAssignmentsFragmentToRefreshCompletedFragment())
     }
 
     private fun sortAssignments() {

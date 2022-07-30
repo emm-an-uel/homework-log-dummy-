@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startFragment">
+    app:startDestination="@id/launchFragment">
 
     <fragment
         android:id="@+id/LogFragment"
@@ -16,7 +16,7 @@
             app:destination="@id/InputFragment" />
         <action
             android:id="@+id/action_LogFragment_to_startFragment"
-            app:destination="@id/startFragment" />
+            app:destination="@id/RefreshLogFragment" />
         <action
             android:id="@+id/action_LogFragment_to_completedAssignmentsFragment"
             app:destination="@id/completedAssignmentsFragment" />
@@ -32,9 +32,9 @@
             app:destination="@id/LogFragment" />
     </fragment>
     <fragment
-        android:id="@+id/startFragment"
-        android:name="com.example.homeworklog_dummy.StartFragment"
-        android:label=""
+        android:id="@+id/RefreshLogFragment"
+        android:name="com.example.homeworklog_dummy.RefreshLogFragment"
+        android:label="@string/main_fragment_label"
         tools:layout="@layout/fragment_start" >
         <action
             android:id="@+id/action_startFragment_to_LogFragment"
@@ -47,6 +47,27 @@
         tools:layout="@layout/fragment_completed_assignments" >
         <action
             android:id="@+id/action_completedAssignmentsFragment_to_LogFragment"
+            app:destination="@id/LogFragment" />
+        <action
+            android:id="@+id/action_completedAssignmentsFragment_to_refreshCompletedFragment"
+            app:destination="@id/refreshCompletedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/refreshCompletedFragment"
+        android:name="com.example.homeworklog_dummy.RefreshCompletedFragment"
+        android:label="@string/main_fragment_label"
+        tools:layout="@layout/fragment_refresh_completed" >
+        <action
+            android:id="@+id/action_refreshCompletedFragment_to_completedAssignmentsFragment"
+            app:destination="@id/completedAssignmentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/launchFragment"
+        android:name="com.example.homeworklog_dummy.LaunchFragment"
+        android:label="fragment_launch"
+        tools:layout="@layout/fragment_launch" >
+        <action
+            android:id="@+id/action_launchFragment_to_LogFragment"
             app:destination="@id/LogFragment" />
     </fragment>
 </navigation>

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 
-class StartFragment : Fragment() {
+class RefreshLogFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,6 +21,6 @@ class StartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        findNavController().navigate(StartFragmentDirections.actionStartFragmentToLogFragment())
+        findNavController().navigate(RefreshLogFragmentDirections.actionStartFragmentToLogFragment())
     }
 }
