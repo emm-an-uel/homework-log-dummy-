@@ -1,8 +1,8 @@
 package com.example.homeworklog_dummy
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.findNavController
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -23,51 +24,39 @@ import java.io.StringReader
  */
 class LogFragment : Fragment() {
 
-    private fun storeJson(completedAssignment: Assignment) {
-        val listAssignments = arrayListOf<Assignment>()
+    private fun storeJson(completedAssignment: Assignment, sortedAssignmentsList: List<Assignment>) {
 
-        // read json
-        val fileJson = File(context!!.filesDir, "fileAssignment").readText()
-
-        // add all items in fileJson into listAssignments
-        JsonReader(StringReader(fileJson)).use { reader ->
-            reader.beginArray {
-                while (reader.hasNext()) {
-                    val assignment = Klaxon().parse<Assignment>(reader)
-                    listAssignments.add(assignment!!)
-                }
-            }
+        // transfer every assignment from sortedAssignmentsList into array "assignmentsList"
+        val assignmentsList = arrayListOf<Assignment>()
+        for (assignment in sortedAssignmentsList) {
+            assignmentsList.add(assignment)
         }
 
-        // remove old assignment
-        var n = 0
-        while (n < listAssignments.size) {
-            val assignment = listAssignments[n]
-            if (assignment == completedAssignment) { // TODO: assignment is never == completedAssignment 
-                listAssignments.removeAt(n)
+        // find completedAssignment by id
+        for (assignment in assignmentsList) {
+            if (completedAssignment.id == assignment.id) {
+                assignmentsList.remove(assignment)
                 break
             }
-
-            n++
         }
 
         // change to reflect "done"
         completedAssignment.status = true
-        listAssignments.add(completedAssignment)
+        assignmentsList.add(completedAssignment)
 
         // save locally
-        val updatedFile = Klaxon().toJsonString(listAssignments)
+        val updatedFile = Klaxon().toJsonString(assignmentsList)
         context!!.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
         }
     }
 
-    private fun markAsDone(assignment: Assignment) {
+    private fun markAsDone(assignment: Assignment, sortedAssignmentsList: List<Assignment>) {
 
-        storeJson(assignment)
+        storeJson(assignment, sortedAssignmentsList)
 
         // refresh fragment
-        sortAssignments()
+        findNavController().navigate(LogFragmentDirections.actionLogFragmentToStartFragment())
     }
 
     private fun sortAssignments() {
@@ -128,7 +117,7 @@ class LogFragment : Fragment() {
             btnDone.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
             tableRow.addView(btnDone)
             btnDone.setOnClickListener {
-                markAsDone(assignment)
+                markAsDone(assignment, sortedAssignmentsList)
             }
 
             // add tableRow into tbAssignments
@@ -157,19 +146,23 @@ class LogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // button to create new assignment
+        binding.newAssignment.setOnClickListener {
+            findNavController().navigate(LogFragmentDirections.actionLogFragmentToInputFragment())
+        }
+
+        // button to navigate to completed log
+        binding.btnCompletedAssignments.setOnClickListener {
+            findNavController().navigate(LogFragmentDirections.actionLogFragmentToCompletedAssignmentsFragment())
+        }
+
         // * display assignments *
         // determine number of existing files
         val files : Array<String> = context!!.fileList()
         val numFiles = files.size
 
         if (numFiles > 1) { // first file is rList which does not have items as required by displayAssignments
-            
-            sortAssignments() // returns sorted list
-        }
-
-        // button to create new assignment
-        binding.newAssignment.setOnClickListener {
-            findNavController().navigate(LogFragmentDirections.actionLogFragmentToInputFragment())
+            sortAssignments()
         }
     }
 

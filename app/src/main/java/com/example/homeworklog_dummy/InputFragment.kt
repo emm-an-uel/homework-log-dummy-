@@ -44,8 +44,10 @@ class InputFragment : Fragment() {
 
     private fun storeLocally(subject : String, task : String, dueDate : String, dateInt: Int, status: Boolean) {
 
+        val id = UUID.randomUUID().toString()
+
         // create val "assignment" using Class "Assignment" parameters
-        val newAssignment = Assignment(subject, task, dueDate, dateInt, status)
+        val newAssignment = Assignment(id, subject, task, dueDate, dateInt, status)
 
         // check if there's existing "fileAssignments"
         var fileExists = false

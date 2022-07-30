@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout
-    android:id="@+id/tableLayout"
+    android:id="@+id/tbCompletedAssignments"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CompletedAssignmentsFragment">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnNewAssignments"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/new_assignments"
+            android:textColor="?attr/colorOnPrimary"/>
+
+        <Button
+            android:id="@+id/btnCompletedAssignments"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/completed_assignments"
+            android:textColor="?attr/colorPrimaryVariant"/>
+
+    </TableRow>
 </TableLayout>

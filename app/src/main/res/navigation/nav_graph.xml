@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_LogFragment_to_startFragment"
             app:destination="@id/startFragment" />
+        <action
+            android:id="@+id/action_LogFragment_to_completedAssignmentsFragment"
+            app:destination="@id/completedAssignmentsFragment" />
     </fragment>
     <fragment
         android:id="@+id/InputFragment"
@@ -35,6 +38,15 @@
         tools:layout="@layout/fragment_start" >
         <action
             android:id="@+id/action_startFragment_to_LogFragment"
+            app:destination="@id/LogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/completedAssignmentsFragment"
+        android:name="com.example.homeworklog_dummy.CompletedAssignmentsFragment"
+        android:label="fragment_completed_assignments"
+        tools:layout="@layout/fragment_completed_assignments" >
+        <action
+            android:id="@+id/action_completedAssignmentsFragment_to_LogFragment"
             app:destination="@id/LogFragment" />
     </fragment>
 </navigation>

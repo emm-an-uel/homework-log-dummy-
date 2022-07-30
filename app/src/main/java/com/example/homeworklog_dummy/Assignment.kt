@@ -1,6 +1,9 @@
 package com.example.homeworklog_dummy
 
-class Assignment (val subject: String,
+import java.util.*
+
+class Assignment (val id: String,
+                  val subject: String,
                   val task: String,
                   val dueDate: String,
                   val dateInt: Int,
