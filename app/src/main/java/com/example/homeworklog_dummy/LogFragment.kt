@@ -96,9 +96,18 @@ class LogFragment : Fragment() {
             val tvTask = TextView(context)
             val tvDueDate = TextView(context)
 
-            tvSubject.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
-            tvTask.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
-            tvDueDate.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
+            tvSubject.layoutParams = TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f)
+            tvTask.layoutParams = TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f)
+            tvDueDate.layoutParams = TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f)
 
             tvSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
             tvTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -114,7 +123,10 @@ class LogFragment : Fragment() {
 
             val btnDone = Button(context)
             btnDone.text = "done"
-            btnDone.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT,TableRow.LayoutParams.WRAP_CONTENT,1f)
+            btnDone.layoutParams = TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f)
             tableRow.addView(btnDone)
             btnDone.setOnClickListener {
                 markAsDone(assignment, sortedAssignmentsList)

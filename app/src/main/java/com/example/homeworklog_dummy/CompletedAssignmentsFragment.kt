@@ -64,13 +64,13 @@ class CompletedAssignmentsFragment : Fragment() {
             val tvDueDate = TextView(context)
 
             tvSubject.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
+                0,
                 TableRow.LayoutParams.WRAP_CONTENT,1f)
             tvTask.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
+                0,
                 TableRow.LayoutParams.WRAP_CONTENT,1f)
             tvDueDate.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
+                0,
                 TableRow.LayoutParams.WRAP_CONTENT,1f)
 
             tvSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -88,7 +88,7 @@ class CompletedAssignmentsFragment : Fragment() {
             val btnDelete = Button(context)
             btnDelete.text = "done"
             btnDelete.layoutParams = TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT,
+                0,
                 TableRow.LayoutParams.WRAP_CONTENT,1f)
             tableRow.addView(btnDelete)
             btnDelete.setOnClickListener {
