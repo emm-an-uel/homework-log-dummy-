@@ -15,7 +15,7 @@
         <Button
             android:id="@+id/btnNewAssignments"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/new_assignments"
@@ -24,7 +24,7 @@
         <Button
             android:id="@+id/btnCompletedAssignments"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/completed_assignments"
