@@ -13,5 +13,8 @@
     <string name="hint_due_date">Due Date:</string>
     <string name="confirm">confirm</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="new_assignments">current assignments</string>
+    <string name="completed_assignments">completed assignments</string>
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
