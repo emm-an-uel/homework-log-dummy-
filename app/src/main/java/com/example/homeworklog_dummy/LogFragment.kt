@@ -71,14 +71,12 @@ class LogFragment : Fragment() {
                 while (reader.hasNext()) {
                     val assignment = Klaxon().parse<Assignment>(reader)
 
-                    if (!assignment!!.status) { // if status == false (assignment is undone)
-                        listAssignments.add(assignment)
-                    }
+                    listAssignments.add(assignment!!) // add all assignments - filter later
                 }
             }
         }
 
-        // sort by dueDateInt and return
+        // sort by dueDateInt and call fun displayAssignments
         displayAssignments(listAssignments.sortedBy { it.dateInt })
     }
 
@@ -86,54 +84,60 @@ class LogFragment : Fragment() {
         var n = 0
         while (n < sortedAssignmentsList.size) {
             val assignment = sortedAssignmentsList[n]
-            val subject = assignment.subject
-            val task = assignment.task
-            val dueDate = assignment.dueDate
+            if (!assignment.status) { // status = false (ie undone)
+                val subject = assignment.subject
+                val task = assignment.task
+                val dueDate = assignment.dueDate
 
-            // display subject, task, dueDate in new table row & add btnDone
-            val tableRow = TableRow(context)
-            val tvSubject = TextView(context)
-            val tvTask = TextView(context)
-            val tvDueDate = TextView(context)
+                // display subject, task, dueDate in new table row & add btnDone
+                val tableRow = TableRow(context)
+                val tvSubject = TextView(context)
+                val tvTask = TextView(context)
+                val tvDueDate = TextView(context)
 
-            tvSubject.layoutParams = TableRow.LayoutParams(
-                0,
-                TableRow.LayoutParams.WRAP_CONTENT,
-                1f)
-            tvTask.layoutParams = TableRow.LayoutParams(
-                0,
-                TableRow.LayoutParams.WRAP_CONTENT,
-                1f)
-            tvDueDate.layoutParams = TableRow.LayoutParams(
-                0,
-                TableRow.LayoutParams.WRAP_CONTENT,
-                1f)
+                tvSubject.layoutParams = TableRow.LayoutParams(
+                    0,
+                    TableRow.LayoutParams.WRAP_CONTENT,
+                    1f
+                )
+                tvTask.layoutParams = TableRow.LayoutParams(
+                    0,
+                    TableRow.LayoutParams.WRAP_CONTENT,
+                    1f
+                )
+                tvDueDate.layoutParams = TableRow.LayoutParams(
+                    0,
+                    TableRow.LayoutParams.WRAP_CONTENT,
+                    1f
+                )
 
-            tvSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
-            tvTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
-            tvDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                tvSubject.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                tvTask.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                tvDueDate.textAlignment = View.TEXT_ALIGNMENT_CENTER
 
-            tvSubject.text = subject
-            tvTask.text = task
-            tvDueDate.text = dueDate
+                tvSubject.text = subject
+                tvTask.text = task
+                tvDueDate.text = dueDate
 
-            tableRow.addView(tvSubject)
-            tableRow.addView(tvTask)
-            tableRow.addView(tvDueDate)
+                tableRow.addView(tvSubject)
+                tableRow.addView(tvTask)
+                tableRow.addView(tvDueDate)
 
-            val btnDone = Button(context)
-            btnDone.text = "done"
-            btnDone.layoutParams = TableRow.LayoutParams(
-                0,
-                TableRow.LayoutParams.WRAP_CONTENT,
-                1f)
-            tableRow.addView(btnDone)
-            btnDone.setOnClickListener {
-                markAsDone(assignment, sortedAssignmentsList)
+                val btnDone = Button(context)
+                btnDone.text = "done"
+                btnDone.layoutParams = TableRow.LayoutParams(
+                    0,
+                    TableRow.LayoutParams.WRAP_CONTENT,
+                    1f
+                )
+                tableRow.addView(btnDone)
+                btnDone.setOnClickListener {
+                    markAsDone(assignment, sortedAssignmentsList)
+                }
+
+                // add tableRow into tbAssignments
+                binding.tbAssignments.addView(tableRow)
             }
-
-            // add tableRow into tbAssignments
-            binding.tbAssignments.addView(tableRow)
 
             n++
         }
